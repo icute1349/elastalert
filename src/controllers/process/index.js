@@ -2,6 +2,7 @@ import { spawn, spawnSync } from 'child_process';
 import config from '../../common/config';
 import Logger from '../../common/logger';
 import { Status } from '../../common/status';
+import fs from 'fs';
 
 let logger = new Logger('ProcessController');
 
@@ -88,19 +89,12 @@ export default class ProcessController {
     logger.info('Starting elastalert with arguments ' + (startArguments.join(' ') || '[none]'));
 
     this._process = spawn('python', ['-m', 'elastalert.elastalert'].concat(startArguments), {
-      cwd: this._elastalertPath
+      cwd: this._elastalertPath,
+      stdio: ['ignore', fs.openSync('/dev/stdout', 'a'), fs.openSync('/dev/stderr', 'a')]
     });
 
     logger.info(`Started Elastalert (PID: ${this._process.pid})`);
     this._status = Status.READY;
-
-    // Redirect stdin/stderr to logger
-    this._process.stdout.on('data', (data) => {
-      logger.info(data.toString());
-    });
-    this._process.stderr.on('data', (data) => {
-      logger.error(data.toString());
-    });
 
     // Set listeners for ElastAlert exit
     this._process.on('exit', (code) => {
