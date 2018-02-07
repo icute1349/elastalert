@@ -40,16 +40,9 @@ export default class ProcessController {
     // Create ElastAlert index if it doesn't exist yet
     logger.info('Creating index');
     var indexCreate = spawnSync('python', ['-m', 'elastalert.create_index', '--index', 'elastalert_status', '--old-index', ''], {
-      cwd: this._elastalertPath
+      cwd: this._elastalertPath,
+      stdio: ['ignore', fs.openSync('/dev/stdout', 'a'), fs.openSync('/dev/stderr', 'a')]
     });
-
-    // Redirect stdin/stderr to logger
-    if (indexCreate.stdout.toString() !== '') {
-      logger.info(indexCreate.stdout.toString());
-    }
-    if (indexCreate.stderr.toString() !== '') {
-      logger.error(indexCreate.stderr.toString());
-    }
 
     // Set listeners for index create exit
     if (indexCreate.status === 0) {
