@@ -64,14 +64,19 @@ ElastAlert supports additional arguments, that can be passed in the `config.json
    ```bash
    git clone https://github.com/bitsensor/elastalert.git && cd elastalert
    ```
-2. Build the image
+2. Build the image using
    ```
+   make build
+   ```
+   which is equivalent of:
+   ```
+   docker pull alpine:latest && docker pull node:latest
    docker build -t elastalert .
    ```
 
 Custom Yelp's Elastalert version (a [release from github](https://github.com/Yelp/elastalert/releases)) e.g. `master` or `v0.1.28`:
 ```bash
-docker build --build-arg ELASTALERT_VERSION=master -t elastalert .
+make build v=v0.1.28
 ```
 Custom mirror:
 ```bash
