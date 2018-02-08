@@ -58,11 +58,30 @@ ElastAlert supports additional arguments, that can be passed in the `config.json
 - [ElastAlert v0.0.96](https://github.com/Yelp/elastalert/tree/v0.0.96). We don't support other versions of ElastAlert, use them at your own risk.
 - [NodeJS 4.5.0](https://nodejs.org/en/download/) with NPM & NVM.
 
+## Building Docker image
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/bitsensor/elastalert.git && cd elastalert
+   ```
+2. Build the image
+   ```
+   docker build -t elastalert .
+   ```
+
+Custom Yelp's Elastalert version (a [release from github](https://github.com/Yelp/elastalert/releases)) e.g. `master` or `v0.1.28`:
+```bash
+docker build --build-arg ELASTALERT_VERSION=master -t elastalert .
+```
+Custom mirror:
+```bash
+docker build --build-arg ELASTALERT_URL=http://example.mirror.com/master.zip -t elastalert .
+```
+
 ## Building from source
 1. Clone the repository
     ```bash
-    git clone https://github.com/bitsensor/elastalert.git elastalert
-    cd elastalert
+    git clone https://github.com/bitsensor/elastalert.git && cd elastalert
     ```
 2. Run `nvm install "$(cat .node-version)"` to install & use the required NodeJS version.
 3. Run `npm install` to install all the dependencies.

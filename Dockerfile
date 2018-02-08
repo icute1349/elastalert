@@ -1,7 +1,9 @@
 FROM alpine:latest as py-ea
-#ARG VERSION
+ARG ELASTALERT_VERSION=v0.1.28
+ENV ELASTALERT_VERSION=${ELASTALERT_VERSION}
 # URL from which to download Elastalert.
-#ENV ELASTALERT_URL https://github.com/Yelp/elastalert/archive/$VERSION.zip
+ARG ELASTALERT_URL=https://github.com/Yelp/elastalert/archive/$ELASTALERT_VERSION.zip
+ENV ELASTALERT_URL=${ELASTALERT_URL}
 # Elastalert home directory full path.
 ENV ELASTALERT_HOME /opt/elastalert
 
