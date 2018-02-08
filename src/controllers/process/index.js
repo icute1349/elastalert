@@ -11,6 +11,7 @@ export default class ProcessController {
   constructor() {
     this._elastalertPath = config.get('elastalertPath');
     this._status = Status.IDLE;
+    this._code = 503; //Service Not Available (yet)
 
     /**
      * @type {ChildProcess}
@@ -21,6 +22,10 @@ export default class ProcessController {
 
   get status() {
     return this._status;
+  }
+
+  get httpCode() {
+    return this._code;
   }
 
   /**
@@ -88,6 +93,7 @@ export default class ProcessController {
 
     logger.info(`Started Elastalert (PID: ${this._process.pid})`);
     this._status = Status.READY;
+    this._code = 200;
 
     // Set listeners for ElastAlert exit
     this._process.on('exit', (code) => {
@@ -97,6 +103,7 @@ export default class ProcessController {
       } else {
         logger.error(`ElastAlert exited with code ${code}`);
         this._status = Status.ERROR;
+        this._code = 500;
       }
       this._process = null;
     });
@@ -105,6 +112,7 @@ export default class ProcessController {
     this._process.on('error', (err) => {
       logger.error(`ElastAlert error: ${err.toString()}`);
       this._status = Status.ERROR;
+      this._code = 500;
       this._process = null;
     });
   }
@@ -118,6 +126,7 @@ export default class ProcessController {
       logger.info(`Stopping ElastAlert (PID: ${this._process.pid})`);
       this._status = Status.CLOSING;
       this._process.kill('SIGINT');
+      this._code = 503; //Service Unavailable
     } else {
       // Do not do anything if ElastAlert is not running
       logger.info('ElastAlert is not running');
